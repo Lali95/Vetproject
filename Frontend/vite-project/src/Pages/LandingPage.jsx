@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+
 import "../index.css";
+import { Outlet, Link } from "react-router-dom";
 
 const LandingPage = () => {
 
@@ -13,14 +14,14 @@ const LandingPage = () => {
       <nav className="nav-container">
         <ul className="nav-list">
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/home">Home</Link>
           </li>
 
 
 
         </ul>
       </nav>
-
+      <Outlet />
     </div>
   );
 };
