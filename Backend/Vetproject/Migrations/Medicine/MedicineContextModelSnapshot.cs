@@ -7,7 +7,7 @@ using Vetproject.Data;
 
 #nullable disable
 
-namespace Vetproject.Migrations
+namespace Vetproject.Migrations.Medicine
 {
     [DbContext(typeof(MedicineContext))]
     partial class MedicineContextModelSnapshot : ModelSnapshot

@@ -8,10 +8,10 @@ using Vetproject.Data;
 
 #nullable disable
 
-namespace Vetproject.Migrations
+namespace Vetproject.Migrations.Medicine
 {
     [DbContext(typeof(MedicineContext))]
-    [Migration("20240224215833_InitialCreate")]
+    [Migration("20240312224214_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

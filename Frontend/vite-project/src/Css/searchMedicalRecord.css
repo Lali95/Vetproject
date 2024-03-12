@@ -18,3 +18,14 @@
     background-color: #1f8b8e;
   }
   
+  .record-container {
+    margin-top: 20px;
+  }
+  
+  .record {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  

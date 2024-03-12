@@ -36,9 +36,18 @@ public class MedicalRecordController : ControllerBase
     [HttpGet("getAllMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> GetAllMedicalRecords()
     {
-        var allMedicalRecords = _dbContext.MedicalRecords.ToList();
+        // Order the medical records by ascending creation date
+        var allMedicalRecords = _dbContext.MedicalRecords
+            .OrderBy(record => record.CreatedAt) // Ordering by ascending creation date
+            .ToList();
+
+        // Reverse the list to get the newest medical record first
+        allMedicalRecords.Reverse();
+
         return Ok(allMedicalRecords);
     }
+
+
 
     [HttpGet("searchMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> SearchMedicalRecords([FromQuery] string searchTerm)

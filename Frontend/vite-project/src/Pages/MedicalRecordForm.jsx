@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'bootstrap';
 
 const MedicalRecordForm = () => {
   const navigate = useNavigate();
@@ -9,8 +8,9 @@ const MedicalRecordForm = () => {
     ownerName: '',
     horseName: '',
     place: '',
-    medication: '',
+    medications: [],
     medicalIntervention: '',
+    createdAt: new Date().toISOString(),
   });
 
   const [notification, setNotification] = useState({
@@ -19,20 +19,42 @@ const MedicalRecordForm = () => {
   });
 
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [medicines, setMedicines] = useState([]);
+  const [selectedMedicine, setSelectedMedicine] = useState('');
 
-  const fetchEmptyMedicalRecord = () => {
-    fetch('/api/MedicalRecord/getEmptyMedicalRecord')
+  useEffect(() => {
+    fetch('/api/Medicine/getMedicines')
       .then(response => response.json())
       .then(data => {
-        setMedicalRecord(data);
-        setNotification({ type: '', message: '' });
-        setShowConfirmation(false);
+        setMedicines(data);
       })
-      .catch(error => {
-        console.error('Error:', error);
-        setNotification({ type: 'error', message: 'Error fetching an empty medical record. Please try again.' });
-        setShowConfirmation(false);
-      });
+      .catch(error => console.error('Error fetching medicines:', error));
+  }, []);
+
+  const addMedicine = () => {
+    const selectedMedicineObject = medicines.find(medicine => medicine.id === parseInt(selectedMedicine));
+    if (selectedMedicineObject) {
+      setMedicalRecord(prevState => ({
+        ...prevState,
+        medications: [...prevState.medications, selectedMedicineObject.name], // Store medicine name
+      }));
+      setSelectedMedicine('');
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const filledMedicalRecord = {
+      vetName: event.target.vetName.value,
+      ownerName: event.target.ownerName.value,
+      horseName: event.target.horseName.value,
+      place: event.target.place.value,
+      medications: medicalRecord.medications, // Keep storing medicine names
+      medicalIntervention: event.target.medicalIntervention.value,
+      createdAt: medicalRecord.createdAt,
+    };
+
+    await saveMedicalRecord(filledMedicalRecord);
   };
 
   const saveMedicalRecord = async (filledMedicalRecord) => {
@@ -48,7 +70,6 @@ const MedicalRecordForm = () => {
       if (response.status === 200) {
         setNotification({ type: 'success', message: 'Medical Record saved successfully.' });
         setShowConfirmation(true);
-        // Handle data if needed
       } else {
         setNotification({ type: 'error', message: 'Error saving medical record.' });
         throw new Error('Error saving medical record.');
@@ -59,26 +80,6 @@ const MedicalRecordForm = () => {
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const filledMedicalRecord = {
-      vetName: event.target.vetName.value,
-      ownerName: event.target.ownerName.value,
-      horseName: event.target.horseName.value,
-      place: event.target.place.value,
-      medication: event.target.medication.value,
-      medicalIntervention: event.target.medicalIntervention.value,
-    };
-
-    await saveMedicalRecord(filledMedicalRecord);
-  };
-
-  useEffect(() => {
-    if (notification.type === 'success') {
-      setShowConfirmation(true);
-    }
-  }, [notification.type]);
-
   const handleOkClick = () => {
     setShowConfirmation(false);
     setNotification({ type: '', message: '' });
@@ -87,24 +88,56 @@ const MedicalRecordForm = () => {
 
   return (
     <div>
-      <h1>{showConfirmation ? 'Success' : 'Medical Record'}</h1>
+      <h1>Medical Record</h1>
       {notification.type === 'error' && <p style={{ color: 'red' }}>{notification.message}</p>}
-      {showConfirmation && (
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="vetName">Vet Name:</label>
+          <input type="text" id="vetName" name="vetName" required />
+        </div>
+        <div>
+          <label htmlFor="ownerName">Owner Name:</label>
+          <input type="text" id="ownerName" name="ownerName" required />
+        </div>
+        <div>
+          <label htmlFor="horseName">Horse Name:</label>
+          <input type="text" id="horseName" name="horseName" required />
+        </div>
+        <div>
+          <label htmlFor="place">Place:</label>
+          <input type="text" id="place" name="place" required />
+        </div>
+        <div>
+          <label htmlFor="medicalIntervention">Medical Intervention:</label>
+          <input type="text" id="medicalIntervention" name="medicalIntervention" required />
+        </div>
+        <div>
+          <label htmlFor="medicines">Medicines:</label>
+          <select
+            id="medicines"
+            name="medicines"
+            value={selectedMedicine}
+            onChange={(e) => setSelectedMedicine(e.target.value)}
+          >
+            <option value="">Select a medicine</option>
+            {medicines.map((medicine, index) => (
+              <option key={index} value={medicine.id}>{medicine.name}</option>
+            ))}
+          </select>
+          <button type="button" onClick={addMedicine}>Add Medicine</button>
+          <ul>
+            {medicalRecord.medications.map((medicine, index) => (
+              <li key={index}>{medicine}</li>
+            ))}
+          </ul>
+        </div>
+        <button type="submit">Save Medical Record</button>
+      </form>
+      {notification.type === 'success' && (
         <div>
           <p style={{ color: 'green' }}>{notification.message}</p>
           <button onClick={handleOkClick}>OK</button>
         </div>
-      )}
-      {!showConfirmation && (
-        <form onSubmit={handleSubmit}>
-          {Object.keys(medicalRecord).map((field, index) => (
-            <div key={index}>
-              <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
-              <input type="text" id={field} name={field} defaultValue={medicalRecord[field]} required />
-            </div>
-          ))}
-          <button type="submit">Save Medical Record</button>
-        </form>
       )}
     </div>
   );

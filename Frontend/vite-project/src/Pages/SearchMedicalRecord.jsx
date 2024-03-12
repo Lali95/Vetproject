@@ -20,7 +20,10 @@ const SearchMedicalRecord = () => {
   const handleSearch = () => {
     const searchTermLower = searchTerm.toLowerCase();
     const filtered = medicalRecords.filter(record =>
-      record.ownerName.toLowerCase().includes(searchTermLower)
+      record.ownerName.toLowerCase().includes(searchTermLower) ||
+      record.vetName.toLowerCase().includes(searchTermLower) ||
+      record.horseName.toLowerCase().includes(searchTermLower) ||
+      new Date(record.createdAt).toLocaleDateString().includes(searchTermLower)
     );
     setFilteredRecords(filtered);
   };
@@ -30,36 +33,27 @@ const SearchMedicalRecord = () => {
       <h1>Medical Records</h1>
       
       <div className="search-container">
-        <label htmlFor="ownerSearch">Search for Owner: </label>
+        <label htmlFor="ownerSearch">Search for Owner, Vet, Horse, or Date: </label>
         <input
           type="text"
           id="ownerSearch"
-          placeholder="Enter owner's name"
+          placeholder="Enter search term"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button className="search-button" onClick={handleSearch}>Search</button>
       </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Vet Name</th>
-            <th>Owner Name</th>
-            <th>Horse Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredRecords.map(record => (
-            <tr key={record.id}>
-              <td>{record.vetName}</td>
-              <td>{record.ownerName}</td>
-              <td>{record.horseName}</td>
-              {/* Add more columns as needed */}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  
+      <div className="record-container">
+        {filteredRecords.map(record => (
+          <div className="record" key={record.id}>
+            <div><strong>Vet Name:</strong> {record.vetName}</div>
+            <div><strong>Owner Name:</strong> {record.ownerName}</div>
+            <div><strong>Horse Name:</strong> {record.horseName}</div>
+            <div><strong>Creation date:</strong> {new Date(record.createdAt).toLocaleString()}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

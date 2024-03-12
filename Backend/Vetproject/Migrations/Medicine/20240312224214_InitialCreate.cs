@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Vetproject.Migrations
+namespace Vetproject.Migrations.Medicine
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
