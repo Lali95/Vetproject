@@ -1,26 +1,21 @@
-
-import "../index.css";
-import { Outlet, Link } from "react-router-dom";
+import { Navbar, Nav } from 'react-bootstrap';
+import { Outlet, Link } from 'react-router-dom';
+import '../Css/landingPage.css';
 
 const LandingPage = () => {
-
-
-
   return (
-    <div className="landing-page">
-      <header className="logo-header">
-
-      </header>
-      <nav className="nav-container">
-        <ul className="nav-list">
-          <li>
-            <Link to="/home">Home</Link>
-          </li>
-
-
-
-        </ul>
-      </nav>
+    <div>
+      <Navbar bg="light" expand="lg">
+        <Navbar.Brand href="/">Your Logo</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+         
+            <Link to="/" className="custom-btn">Home</Link>
+            <Link to="/medicalRecord" className="custom-btn">Medical Record</Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
       <Outlet />
     </div>
   );

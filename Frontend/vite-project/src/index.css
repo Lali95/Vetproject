@@ -1,3 +1,6 @@
+/* Import Bootstrap CSS */
+@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -35,96 +38,6 @@ h1 {
   line-height: 1.1;
 }
 
-
-
-
-button {
-  border: none;
-  border-radius: 8px;
-  background-color: #4caf50;
-  color: #000;
-  padding: 8px 16px;
-  font-size: 1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.25s, color 0.25s;
-  margin-top: auto; 
-}
-
-button:hover {
-  background-color: #003c03;
-  color: #fff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: lightgray;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: seagreen;
-  }
-}
-
-/* Movie card styles */
-.movie-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid seagreen;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 16px;
-  max-width: 200px;
-  background-color: lightgray;
-}
-
-.poster {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-
-.title {
-  font-size: 18px;
-  margin-bottom: 4px;
-}
-
-.year {
-  font-size: 14px;
-  color: #777;
-}
-
-/* Movie cards container styles */
-.movie-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  margin: 0 -8px;
-}
-
-/* Landing page styles */
-.landing-page {
-  width: 100%;
-}
-
-/* Logo header styles */
-.logo-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 /* Navigation container styles */
 .nav-container {
   display: flex;
@@ -143,61 +56,7 @@ button:focus-visible {
   margin: 0;
 }
 
-/* Search bar container styles */
-.search-bar-container {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* Search bar styles */
-.search-bar {
-  display: inline-block;
-  position: relative;
-}
-
-/* Search bar input styles */
-.search-bar input {
-  width: 400px;
-}
-
-/* Datalist styles */
-#movies-list {
-  width: 400px;
-}
-
-.merchandise-container {
-  display: flex;
-  gap: 20px;
-  justify-content: space-around; /* Change to space-around */
-  flex-wrap: wrap;
-}
-
-/* Merchandise card styles */
-.merchandise-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid #ccc;
-  padding: 16px;
-  width: 200px;
-  height: 300px; /* Set a fixed height */
-  box-sizing: border-box; /* Include padding in the height */
-  margin: 10px; /* Add margin for spacing */
-}
-
-.merchandise-card img {
-  width: 100%; /* Make the image fill the container */
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-
-.merchandise-card .title {
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-.merchandise-card .price {
-  font-size: 14px;
-  color: #777;
+/* Add margin between buttons */
+.nav-list a {
+  margin-right: 50px; /* Adjust the margin as needed */
 }

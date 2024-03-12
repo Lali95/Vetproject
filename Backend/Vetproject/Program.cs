@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 using Vetproject.Data;
 using Vetproject.Model;
 
@@ -32,47 +33,21 @@ app.UseCors(options =>
 
 app.MapControllers();
 
-
-void InitializeDb()
-{
-    using var db = new MedicineContext();
-    InitializeMedicines();
-  
-
-    void InitializeMedicines()
-    {
-        db.Add(new Medicine() { Name = "Phenylbutazone", Amount  = 5});
-        db.Add(new Medicine() { Name = "Flunixin meglumine (Banamine)", Amount  = 5});
-        db.Add(new Medicine() { Name = "Omeprazole (GastroGard)", Amount  = 5});
-        db.Add(new Medicine() { Name = "Firocoxib (Equioxx)", Amount  = 5});
-        db.Add(new Medicine() { Name = "Polysulfated glycosaminoglycan (Adequan)", Amount  = 5});
-        db.Add(new Medicine() { Name = "Hyaluronic acid", Amount  = 5});
-        db.Add(new Medicine() { Name = "Dexamethasone", Amount  = 5});
-        db.Add(new Medicine() { Name = "Prednisolone", Amount  = 5});
-        db.Add(new Medicine() { Name = "Tetracycline", Amount  = 5});
-        db.Add(new Medicine() { Name = "Ivermectin", Amount  = 5});
-        db.Add(new Medicine() { Name = "Pyrantel pamoate", Amount  = 5});
-        db.Add(new Medicine() { Name = "Praziquantel", Amount  = 5});
-        db.Add(new Medicine() { Name = "Gentamicin", Amount  = 5});
-        db.Add(new Medicine() { Name = "Sulfadiazine/Trimethoprim", Amount  = 5});
-        db.Add(new Medicine() { Name = "Ketoprofen", Amount  = 5});
-        db.Add(new Medicine() { Name = "Acepromazine", Amount  = 5});
-        db.Add(new Medicine() { Name = "Clenbuterol", Amount  = 5});
-        db.Add(new Medicine() { Name = "Isoxsuprine", Amount  = 5});
-        db.Add(new Medicine() { Name = "Methocarbamol", Amount  = 5});
-        db.Add(new Medicine() { Name = "Epsom salts (magnesium sulfate)", Amount  = 5});
-        db.SaveChanges();
-    }
-}
-
-InitializeDb();
-
+// Initialize the database
+//InitializeDb();
 
 app.Run();
 
 void AddServices(IServiceCollection services)
 {
     services.AddControllers();
+// Add DbContext with dependency injection
+    services.AddDbContext<MedicalRecordDbContext>(options =>
+        options.UseSqlServer("Server=localhost,1433;Database=vetproject;Persist Security Info=False;User ID=SA;Password=VetProject2024;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=300;Initial Catalog=vetproject"));
+
+    // Add DbContext with dependency injection
+    services.AddDbContext<MedicineContext>(options =>
+        options.UseSqlServer("Server=localhost,1433;Database=vetproject;Persist Security Info=False;User ID=SA;Password=VetProject2024;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=300;Initial Catalog=vetproject"));
 }
 
 void ConfigureSwagger(IServiceCollection services)
@@ -106,3 +81,45 @@ void ConfigureSwagger(IServiceCollection services)
         });
     });
 }
+
+void InitializeDb()
+{
+    using var scope = app.Services.CreateScope();
+    var serviceProvider = scope.ServiceProvider;
+    var db = serviceProvider.GetRequiredService<MedicineContext>();
+
+    // Apply migrations and update the database schema
+    db.Database.Migrate();
+
+    // Your data initialization logic here
+    InitializeMedicines(db);
+}
+
+void InitializeMedicines(MedicineContext db)
+{
+    db.Medicines.AddRange(
+        new Medicine { Name = "Phenylbutazone (Bute)", Amount = 5 },
+        new Medicine { Name = "Flunixin meglumine (Banamine)", Amount = 5 },
+        new Medicine { Name = "Omeprazole (GastroGard)", Amount = 5 },
+        new Medicine { Name = "Firocoxib (Equioxx)", Amount = 5 },
+        new Medicine { Name = "Polysulfated glycosaminoglycan (Adequan)", Amount = 5 },
+        new Medicine { Name = "Hyaluronic acid", Amount = 5 },
+        new Medicine { Name = "Dexamethasone", Amount = 5 },
+        new Medicine { Name = "Prednisolone", Amount = 5 },
+        new Medicine { Name = "Tetracycline", Amount = 5 },
+        new Medicine { Name = "Ivermectin", Amount = 5 },
+        new Medicine { Name = "Pyrantel pamoate", Amount = 5 },
+        new Medicine { Name = "Praziquantel", Amount = 5 },
+        new Medicine { Name = "Gentamicin", Amount = 5 },
+        new Medicine { Name = "Sulfadiazine/Trimethoprim (SMZ-TMP)", Amount = 5 },
+        new Medicine { Name = "Ketoprofen", Amount = 5 },
+        new Medicine { Name = "Acepromazine", Amount = 5 },
+        new Medicine { Name = "Clenbuterol", Amount = 5 },
+        new Medicine { Name = "Isoxsuprine", Amount = 5 },
+        new Medicine { Name = "Methocarbamol", Amount = 5 },
+        new Medicine { Name = "Epsom salts (magnesium sulfate)", Amount = 5 }
+    );
+
+    db.SaveChanges();
+}
+

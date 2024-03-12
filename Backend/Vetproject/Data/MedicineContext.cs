@@ -1,15 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Vetproject.Model;
 
-namespace Vetproject.Data;
-
-public class MedicineContext : DbContext
+namespace Vetproject.Data
 {
-    public DbSet<Medicine> Medicines { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public class MedicineContext : DbContext
     {
-        optionsBuilder.UseSqlServer(
-            "Server=localhost,1433;Database=vetproject;User Id=sa;Password=VetProject2024;Encrypt=false;");
+        public DbSet<Medicine> Medicines { get; set; }
+
+        public MedicineContext(DbContextOptions<MedicineContext> options) : base(options)
+        {
+        }
     }
 }

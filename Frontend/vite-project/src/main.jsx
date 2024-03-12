@@ -1,6 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import MedicalRecord from './Pages/MedicalRecord';
+
+
 
 import './index.css'
 
@@ -8,6 +11,8 @@ import './index.css'
 import Layout from './Pages/Layout';
 import ErrorPage from "./Pages/ErrorPage";
 import Home from './Pages/Home';
+import MedicalRecordForm from './Pages/MedicalRecordForm';
+import SearchMedicalRecord from './Pages/SearchMedicalRecord';
 
 
 const router = createBrowserRouter([
@@ -16,10 +21,21 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/home",
+        path: "/",
         element: <Home/>,
       },
-     
+     {
+      path: "/medicalRecord",
+      element: <MedicalRecord/>,
+     },
+     {
+      path: "/create-medical-record",
+      element: <MedicalRecordForm/>,
+     },
+     {
+      path: "/search-medical-record",
+      element: <SearchMedicalRecord/>,
+     }
      
     ],
   },
