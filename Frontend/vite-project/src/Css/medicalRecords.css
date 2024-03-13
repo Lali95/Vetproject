@@ -1,31 +1,102 @@
+/* Adjust the margin-right for the modern-button */
 .modern-button {
-    display: inline-block;
-    background-color: #41a835;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .modern-button:hover {
-    background-color: #12907b;
-  }
-  
-  /* Additional styles to differentiate from links */
-  .modern-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .modern-button:focus {
-    outline: none;
-  }
-  
-  .modern-button:visited {
-    color: #fff;
-  }
-  
+  display: inline-block;
+  background-color: #8fc60c;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 10px; /* Add margin-right */
+}
+
+.modern-button:hover {
+  background-color: #12907b;
+}
+
+/* Additional styles to differentiate from links */
+.modern-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.modern-button:focus {
+  outline: none;
+}
+
+.modern-button:visited {
+  color: #fff;
+}
+
+/* Container styling */
+.container {
+  max-width: 800px; /* Adjust the max-width as needed */
+  margin: 0 auto; /* Center the container horizontally */
+}
+
+.form-container {
+  display: flex; /* Use flexbox for form layout */
+  flex-direction: column; /* Stack form elements vertically */
+  align-items: center; /* Center items horizontally */
+}
+
+.form-group {
+  margin-bottom: 20px; /* Add space between form groups */
+  width: 100%; /* Set form group width to full width */
+  max-width: 400px; /* Limit form group width */
+}
+
+label {
+  display: inline-block;
+  width: 120px; /* Set a fixed width for labels */
+  text-align: right; /* Align labels to the right */
+  margin-right: 10px; /* Add margin between labels and inputs */
+}
+
+input[type="text"],
+select {
+  width: calc(100% - 130px); /* Calculate the width of input fields */
+  padding: 8px; /* Add padding to input fields */
+  border-radius: 5px; /* Add border radius to input fields */
+  border: 1px solid #ccc; /* Add border to input fields */
+  box-sizing: border-box; /* Include padding and border in the width calculation */
+}
+
+ul {
+  list-style: none; /* Remove bullet points from the list */
+  padding-left: 0; /* Remove default padding from the list */
+}
+
+/* Add Medicine button style */
+.add-medicine-btn {
+  background-color: #007bff; /* Blue color */
+  color: #fff; /* White text */
+  padding: 10px 20px; /* Padding */
+  border-radius: 5px; /* Rounded corners */
+  border: none; /* No border */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+  margin-top: 10px; /* Add margin at the top */
+}
+
+.add-medicine-btn:hover {
+  background-color: #0056b3; /* Darker blue color on hover */
+}
+
+/* Save Medical Record button style */
+.save-record-btn {
+  background-color: #41a835; /* Green color */
+  color: #fff; /* White text */
+  padding: 10px 20px; /* Padding */
+  border-radius: 5px; /* Rounded corners */
+  border: none; /* No border */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.save-record-btn:hover {
+  background-color: #12907b; /* Darker green color on hover */
+}
