@@ -4,6 +4,10 @@ import { Outlet, Link } from 'react-router-dom';
 import '../Css/landingPage.css';
 
 const LandingPage = () => {
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
   return (
     <div className="nav-container"> {/* Add a container class */}
       <Navbar bg="light" expand="lg">
@@ -17,6 +21,9 @@ const LandingPage = () => {
         </Navbar.Collapse>
       </Navbar>
       <Outlet />
+      <button className="back-button btn btn-primary" onClick={handleGoBack}>
+        Back
+      </button>
     </div>
   );
 };
