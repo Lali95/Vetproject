@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using Vetproject.Data.Repository;
 using Vetproject.Model;
 
@@ -14,29 +15,6 @@ public class MedicalRecordController : ControllerBase
         _medicalRecordRepository = medicalRecordRepository;
     }
 
-    [HttpGet("getEmptyMedicalRecord")]
-    public ActionResult<MedicalRecord> GetEmptyMedicalRecord()
-    {
-        var emptyMedicalRecord = new MedicalRecord();
-        return Ok(emptyMedicalRecord);
-    }
-
-    [HttpPost("saveMedicalRecord")]
-    public ActionResult SaveMedicalRecord([FromBody] MedicalRecord filledMedicalRecord)
-    {
-        _medicalRecordRepository.Add(filledMedicalRecord);
-        return Ok("Medical Record saved successfully.");
-    }
-
-    [HttpGet("getAllMedicalRecords")]
-    public ActionResult<IEnumerable<MedicalRecord>> GetAllMedicalRecords()
-    {
-        var allMedicalRecords = _medicalRecordRepository.GetAll()
-            .OrderByDescending(record => record.CreatedAt) // Order by creation date in descending order
-            .ToList();
-        return Ok(allMedicalRecords);
-    }
-
     [HttpGet("{id}")]
     public ActionResult<MedicalRecord> GetMedicalRecord(int id)
     {
@@ -49,6 +27,48 @@ public class MedicalRecordController : ControllerBase
         return Ok(medicalRecord);
     }
 
+    [HttpGet("getAllMedicalRecords")]
+    public ActionResult<IEnumerable<MedicalRecord>> GetAllMedicalRecords()
+    {
+        var allMedicalRecords = _medicalRecordRepository.GetAll()
+            .OrderByDescending(record => record.CreatedAt)
+            .ToList();
+        return Ok(allMedicalRecords);
+    }
+
+    [HttpPost("saveMedicalRecord")]
+    public ActionResult SaveMedicalRecord([FromBody] MedicalRecord filledMedicalRecord)
+    {
+        _medicalRecordRepository.Add(filledMedicalRecord);
+        return Ok("Medical Record saved successfully.");
+    }
+
+    [HttpPut("updateMedicalRecord/{id}")]
+    public ActionResult UpdateMedicalRecord(int id, [FromBody] MedicalRecord medicalRecord)
+    {
+        var existingRecord = _medicalRecordRepository.Get(id);
+        if (existingRecord == null)
+        {
+            return NotFound("Medical record not found.");
+        }
+
+        medicalRecord.Id = id;
+        _medicalRecordRepository.Update(medicalRecord);
+        return Ok("Medical Record updated successfully.");
+    }
+
+    [HttpDelete("deleteMedicalRecord/{id}")]
+    public ActionResult DeleteMedicalRecord(int id)
+    {
+        var existingRecord = _medicalRecordRepository.Get(id);
+        if (existingRecord == null)
+        {
+            return NotFound("Medical record not found.");
+        }
+
+        _medicalRecordRepository.Delete(id);
+        return Ok("Medical Record deleted successfully.");
+    }
 
     [HttpGet("searchMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> SearchMedicalRecords([FromQuery] string searchTerm)
@@ -58,20 +78,7 @@ public class MedicalRecordController : ControllerBase
             return BadRequest("Search term cannot be empty.");
         }
 
-        var searchTermLower = searchTerm.ToLower(); // Convert search term to lowercase
-
-        var matchingRecords = _medicalRecordRepository.GetAll()
-            .Where(record =>
-                record.OwnerName.ToLower().Contains(searchTermLower) || // Convert strings to lowercase for comparison
-                record.HorseName.ToLower().Contains(searchTermLower) ||
-                record.VetName.ToLower().Contains(searchTermLower))
-            .ToList();
-
+        var matchingRecords = _medicalRecordRepository.Search(searchTerm);
         return Ok(matchingRecords);
     }
-
-
-
-
-
 }
