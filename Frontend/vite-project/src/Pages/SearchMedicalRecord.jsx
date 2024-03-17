@@ -1,31 +1,48 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from 'react-bootstrap';
 import '../Css/searchMedicalRecord.css'; // Import CSS file for styling
 
 const SearchMedicalRecord = () => {
-  const [medicalRecords, setMedicalRecords] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredRecords, setFilteredRecords] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
 
   useEffect(() => {
-    // Fetch all medical records on component mount
     fetch('/api/MedicalRecord/getAllMedicalRecords')
       .then(response => response.json())
       .then(data => {
-        setMedicalRecords(data);
         setFilteredRecords(data);
       })
       .catch(error => console.error('Error fetching medical records:', error));
   }, []);
 
   const handleSearch = () => {
-    const searchTermLower = searchTerm.toLowerCase();
-    const filtered = medicalRecords.filter(record =>
-      record.ownerName.toLowerCase().includes(searchTermLower) ||
-      record.vetName.toLowerCase().includes(searchTermLower) ||
-      record.horseName.toLowerCase().includes(searchTermLower) ||
-      new Date(record.createdAt).toLocaleDateString().includes(searchTermLower)
-    );
-    setFilteredRecords(filtered);
+    fetch(`/api/MedicalRecord/searchMedicalRecords?searchTerm=${searchTerm}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setFilteredRecords(data);
+      })
+      .catch(error => {
+        console.error('Error fetching medical records:', error);
+      });
+  };
+
+  const handleSort = (key) => {
+    const direction = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
+    setSortConfig({ key, direction });
+
+    const sortedRecords = [...filteredRecords].sort((a, b) => {
+      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
+      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    setFilteredRecords(sortedRecords);
   };
 
   return (
@@ -33,15 +50,27 @@ const SearchMedicalRecord = () => {
       <h1>Medical Records</h1>
       
       <div className="search-container">
-        <label htmlFor="ownerSearch">Search for Owner, Vet, Horse, or Date: </label>
+        <label htmlFor="searchTerm">Search:</label>
         <input
           type="text"
-          id="ownerSearch"
+          id="searchTerm"
           placeholder="Enter search term"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button className="search-button" onClick={handleSearch}>Search</button>
+        <Button variant="success" onClick={handleSearch}>Search</Button>
+      </div>
+
+      <div className="sorting-buttons">
+        <Button variant="info" style={{ width: '200px' }} onClick={() => handleSort('createdAt')}>
+          Order by Date {sortConfig.key === 'createdAt' ? `(${sortConfig.direction === 'asc' ? '↑' : '↓'})` : ''}
+        </Button>
+        <Button variant="info" style={{ width: '200px' }} onClick={() => handleSort('horseName')}>
+          Order by Horse Name {sortConfig.key === 'horseName' ? `(${sortConfig.direction === 'asc' ? '↑' : '↓'})` : ''}
+        </Button>
+        <Button variant="info" style={{ width: '200px' }} onClick={() => handleSort('ownerName')}>
+          Order by Owner Name {sortConfig.key === 'ownerName' ? `(${sortConfig.direction === 'asc' ? '↑' : '↓'})` : ''}
+        </Button>
       </div>
   
       <div className="record-container">

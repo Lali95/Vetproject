@@ -43,7 +43,7 @@ public class MedicalRecordRepository : IMedicalRecordRepository
         }
     }
 
-    public IEnumerable<MedicalRecord> Search(string searchTerm)
+    public IEnumerable<MedicalRecord> Search(string ownerName, string s, string searchTerm)
     {
         return _dbContext.MedicalRecords.Where(record => record.OwnerName.Contains(searchTerm)).ToList();
     }

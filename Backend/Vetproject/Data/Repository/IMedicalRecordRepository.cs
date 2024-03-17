@@ -9,5 +9,5 @@ public interface IMedicalRecordRepository
     void Add(MedicalRecord medicalRecord);
     void Update(MedicalRecord medicalRecord);
     void Delete(int id);
-    IEnumerable<MedicalRecord> Search(string searchTerm);
+    IEnumerable<MedicalRecord> Search(string ownerName, string s, string searchTerm);
 }

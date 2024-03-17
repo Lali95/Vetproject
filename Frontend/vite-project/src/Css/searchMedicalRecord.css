@@ -1,31 +1,41 @@
 .search-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .search-button {
-    background-color: #129434;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .search-button:hover {
-    background-color: #1f8b8e;
-  }
-  
-  .record-container {
-    margin-top: 20px;
-  }
-  
-  .record {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
+  display: flex;
+  align-items: center;
+}
+
+.search-button {
+  background-color: #129434;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #1f8b8e;
+}
+
+.record-container {
+  margin-top: 20px;
+}
+
+.record {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.sorting-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.sorting-buttons .btn {
+  width: 200px; /* Set a fixed width for the buttons */
+  white-space: nowrap; /* Prevent text wrapping */
+}

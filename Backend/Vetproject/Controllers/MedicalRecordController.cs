@@ -31,9 +31,13 @@ public class MedicalRecordController : ControllerBase
     [HttpGet("getAllMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> GetAllMedicalRecords()
     {
-        var allMedicalRecords = _medicalRecordRepository.GetAll();
+        var allMedicalRecords = _medicalRecordRepository.GetAll()
+            .OrderByDescending(record => record.CreatedAt) // Order by creation date in descending order
+            .ToList();
         return Ok(allMedicalRecords);
     }
+
+
 
     [HttpGet("searchMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> SearchMedicalRecords([FromQuery] string searchTerm)
@@ -43,7 +47,20 @@ public class MedicalRecordController : ControllerBase
             return BadRequest("Search term cannot be empty.");
         }
 
-        var matchingRecords = _medicalRecordRepository.Search(searchTerm);
+        var searchTermLower = searchTerm.ToLower(); // Convert search term to lowercase
+
+        var matchingRecords = _medicalRecordRepository.GetAll()
+            .Where(record =>
+                record.OwnerName.ToLower().Contains(searchTermLower) || // Convert strings to lowercase for comparison
+                record.HorseName.ToLower().Contains(searchTermLower) ||
+                record.VetName.ToLower().Contains(searchTermLower))
+            .ToList();
+
         return Ok(matchingRecords);
     }
+
+
+
+
+
 }
