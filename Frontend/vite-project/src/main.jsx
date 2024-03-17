@@ -1,51 +1,46 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import React from 'react';
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import LandingPage from './Pages/LandingPage';
+import ErrorPage from './Pages/ErrorPage';
+import Home from './Pages/Home';
 import MedicalRecord from './Pages/MedicalRecord';
 import DisplayMedicalRecord from './Pages/DisplayMedicalRecord';
-import './index.css'
-import Layout from './Pages/Layout';
-import ErrorPage from "./Pages/ErrorPage";
-import Home from './Pages/Home';
 import MedicalRecordForm from './Pages/MedicalRecordForm';
 import SearchMedicalRecord from './Pages/SearchMedicalRecord';
-
-
+import './index.css';
 
 const router = createBrowserRouter([
   {
-       element: <Layout />,
+    element: <LandingPage />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/",
-        element: <Home/>,
+        path: '/',
+        element: <Home />,
       },
-     {
-      path: "/medicalRecord",
-      element: <MedicalRecord/>,
-     },
-     {
-      path: "/create-medical-record",
-      element: <MedicalRecordForm/>,
-     },
-     {
-      path: "/search-medical-record",
-      element: <SearchMedicalRecord/>,
-     },
-     {
-      path: `/medicalRecord/:id`,
-      element: <DisplayMedicalRecord />,
-    }
-    
-     
+      {
+        path: '/medicalRecord',
+        element: <MedicalRecord />,
+      },
+      {
+        path: '/create-medical-record',
+        element: <MedicalRecordForm />,
+      },
+      {
+        path: '/search-medical-record',
+        element: <SearchMedicalRecord />,
+      },
+      {
+        path: '/medicalRecord/:id',
+        element: <DisplayMedicalRecord />,
+      },
     ],
   },
 ]);
-const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const root = createRoot(document.getElementById('root'));
+
 root.render(
- 
-    <RouterProvider router={router} />
-  
+  <RouterProvider router={router} />
 );
-    
