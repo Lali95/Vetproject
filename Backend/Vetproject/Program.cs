@@ -38,7 +38,7 @@ app.UseCors(options =>
 app.MapControllers();
 
 // Initialize the database
-//InitializeDb();
+InitializeDb();
 
 app.Run();
 

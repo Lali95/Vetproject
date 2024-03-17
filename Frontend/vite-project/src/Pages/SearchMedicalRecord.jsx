@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
-import '../Css/searchMedicalRecord.css'; // Import CSS file for styling
+import { useNavigate } from 'react-router-dom';
 
 const SearchMedicalRecord = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredRecords, setFilteredRecords] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('/api/MedicalRecord/getAllMedicalRecords')
@@ -45,6 +46,10 @@ const SearchMedicalRecord = () => {
     setFilteredRecords(sortedRecords);
   };
 
+  const handleSelectRecord = (id) => {
+    navigate(`/medicalRecord/${id}`);
+  };
+
   return (
     <div>
       <h1>Medical Records</h1>
@@ -75,7 +80,7 @@ const SearchMedicalRecord = () => {
   
       <div className="record-container">
         {filteredRecords.map(record => (
-          <div className="record" key={record.id}>
+          <div className="record" key={record.id} onClick={() => handleSelectRecord(record.id)}>
             <div><strong>Vet Name:</strong> {record.vetName}</div>
             <div><strong>Owner Name:</strong> {record.ownerName}</div>
             <div><strong>Horse Name:</strong> {record.horseName}</div>

@@ -37,6 +37,17 @@ public class MedicalRecordController : ControllerBase
         return Ok(allMedicalRecords);
     }
 
+    [HttpGet("{id}")]
+    public ActionResult<MedicalRecord> GetMedicalRecord(int id)
+    {
+        var medicalRecord = _medicalRecordRepository.Get(id);
+        if (medicalRecord == null)
+        {
+            return NotFound("Medical record not found.");
+        }
+
+        return Ok(medicalRecord);
+    }
 
 
     [HttpGet("searchMedicalRecords")]
