@@ -36,6 +36,7 @@ app.MapControllers();
 // Initialize the database
 //InitializeDb();
 
+
 app.Run();
 
 void AddServices(IServiceCollection services)

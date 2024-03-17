@@ -1,18 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
+using Vetproject.Data.Repository;
 using Vetproject.Model;
 
 [ApiController]
 [Route("api/[controller]")]
 public class MedicalRecordController : ControllerBase
 {
-    private readonly MedicalRecordDbContext _dbContext;
+    private readonly IMedicalRecordRepository _medicalRecordRepository;
 
-    public MedicalRecordController(MedicalRecordDbContext dbContext)
+    public MedicalRecordController(IMedicalRecordRepository medicalRecordRepository)
     {
-        _dbContext = dbContext;
+        _medicalRecordRepository = medicalRecordRepository;
     }
 
     [HttpGet("getEmptyMedicalRecord")]
@@ -25,29 +24,16 @@ public class MedicalRecordController : ControllerBase
     [HttpPost("saveMedicalRecord")]
     public ActionResult SaveMedicalRecord([FromBody] MedicalRecord filledMedicalRecord)
     {
-        // Save the filledMedicalRecord to the database
-        _dbContext.MedicalRecords.Add(filledMedicalRecord);
-        _dbContext.SaveChanges();
-
-        // Return a success message or status code
+        _medicalRecordRepository.Add(filledMedicalRecord);
         return Ok("Medical Record saved successfully.");
     }
 
     [HttpGet("getAllMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> GetAllMedicalRecords()
     {
-        // Order the medical records by ascending creation date
-        var allMedicalRecords = _dbContext.MedicalRecords
-            .OrderBy(record => record.CreatedAt) // Ordering by ascending creation date
-            .ToList();
-
-        // Reverse the list to get the newest medical record first
-        allMedicalRecords.Reverse();
-
+        var allMedicalRecords = _medicalRecordRepository.GetAll();
         return Ok(allMedicalRecords);
     }
-
-
 
     [HttpGet("searchMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> SearchMedicalRecords([FromQuery] string searchTerm)
@@ -57,10 +43,7 @@ public class MedicalRecordController : ControllerBase
             return BadRequest("Search term cannot be empty.");
         }
 
-        var matchingRecords = _dbContext.MedicalRecords
-            .Where(record => record.OwnerName.Contains(searchTerm))
-            .ToList();
-
+        var matchingRecords = _medicalRecordRepository.Search(searchTerm);
         return Ok(matchingRecords);
     }
 }
