@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vetproject.Data.Repository;
@@ -18,67 +19,115 @@ public class MedicalRecordController : ControllerBase
     [HttpGet("{id}")]
     public ActionResult<MedicalRecord> GetMedicalRecord(int id)
     {
-        var medicalRecord = _medicalRecordRepository.Get(id);
-        if (medicalRecord == null)
+        try
         {
-            return NotFound("Medical record not found.");
-        }
+            var medicalRecord = _medicalRecordRepository.Get(id);
+            if (medicalRecord == null)
+            {
+                return NotFound("Medical record not found.");
+            }
 
-        return Ok(medicalRecord);
+            return Ok(medicalRecord);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return StatusCode(500, "An error occurred while processing the request.");
+        }
     }
 
     [HttpGet("getAllMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> GetAllMedicalRecords()
     {
-        var allMedicalRecords = _medicalRecordRepository.GetAll()
-            .OrderByDescending(record => record.CreatedAt)
-            .ToList();
-        return Ok(allMedicalRecords);
+        try
+        {
+            var allMedicalRecords = _medicalRecordRepository.GetAll()
+                .OrderByDescending(record => record.CreatedAt)
+                .ToList();
+            return Ok(allMedicalRecords);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return StatusCode(500, "An error occurred while processing the request.");
+        }
     }
 
     [HttpPost("saveMedicalRecord")]
     public ActionResult SaveMedicalRecord([FromBody] MedicalRecord filledMedicalRecord)
     {
-        _medicalRecordRepository.Add(filledMedicalRecord);
-        return Ok("Medical Record saved successfully.");
+        try
+        {
+            _medicalRecordRepository.Add(filledMedicalRecord);
+            return Ok("Medical Record saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return StatusCode(500, "An error occurred while processing the request.");
+        }
     }
 
     [HttpPut("updateMedicalRecord/{id}")]
     public ActionResult UpdateMedicalRecord(int id, [FromBody] MedicalRecord medicalRecord)
     {
-        var existingRecord = _medicalRecordRepository.Get(id);
-        if (existingRecord == null)
+        try
         {
-            return NotFound("Medical record not found.");
-        }
+            var existingRecord = _medicalRecordRepository.Get(id);
+            if (existingRecord == null)
+            {
+                return NotFound("Medical record not found.");
+            }
 
-        medicalRecord.Id = id;
-        _medicalRecordRepository.Update(medicalRecord);
-        return Ok("Medical Record updated successfully.");
+            medicalRecord.Id = id;
+            _medicalRecordRepository.Update(medicalRecord);
+            return Ok("Medical Record updated successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return StatusCode(500, "An error occurred while processing the request.");
+        }
     }
 
     [HttpDelete("deleteMedicalRecord/{id}")]
     public ActionResult DeleteMedicalRecord(int id)
     {
-        var existingRecord = _medicalRecordRepository.Get(id);
-        if (existingRecord == null)
+        try
         {
-            return NotFound("Medical record not found.");
-        }
+            var existingRecord = _medicalRecordRepository.Get(id);
+            if (existingRecord == null)
+            {
+                return NotFound("Medical record not found.");
+            }
 
-        _medicalRecordRepository.Delete(id);
-        return Ok("Medical Record deleted successfully.");
+            _medicalRecordRepository.Delete(id);
+            return Ok("Medical Record deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return StatusCode(500, "An error occurred while processing the request.");
+        }
     }
 
     [HttpGet("searchMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> SearchMedicalRecords([FromQuery] string searchTerm)
     {
-        if (string.IsNullOrEmpty(searchTerm))
+        try
         {
-            return BadRequest("Search term cannot be empty.");
-        }
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return BadRequest("Search term cannot be empty.");
+            }
 
-        var matchingRecords = _medicalRecordRepository.Search(searchTerm);
-        return Ok(matchingRecords);
+            var matchingRecords = _medicalRecordRepository.Search(searchTerm);
+            return Ok(matchingRecords);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return StatusCode(500, "An error occurred while processing the request.");
+        }
     }
 }

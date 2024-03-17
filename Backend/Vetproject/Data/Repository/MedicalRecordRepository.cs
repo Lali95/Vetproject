@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Vetproject.Model;
 
 namespace Vetproject.Data.Repository
@@ -15,43 +17,91 @@ namespace Vetproject.Data.Repository
 
         public MedicalRecord Get(int id)
         {
-            return _dbContext.MedicalRecords.FirstOrDefault(record => record.Id == id);
+            try
+            {
+                return _dbContext.MedicalRecords.FirstOrDefault(record => record.Id == id);
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                throw new Exception("Error occurred while retrieving the medical record.", ex);
+            }
         }
 
         public IEnumerable<MedicalRecord> GetAll()
         {
-            return _dbContext.MedicalRecords.ToList();
+            try
+            {
+                return _dbContext.MedicalRecords.ToList();
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                throw new Exception("Error occurred while retrieving all medical records.", ex);
+            }
         }
 
         public void Add(MedicalRecord medicalRecord)
         {
-            _dbContext.MedicalRecords.Add(medicalRecord);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.MedicalRecords.Add(medicalRecord);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                throw new Exception("Error occurred while adding the medical record.", ex);
+            }
         }
 
         public void Update(MedicalRecord medicalRecord)
         {
-            _dbContext.MedicalRecords.Update(medicalRecord);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.MedicalRecords.Update(medicalRecord);
+                _dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                throw new Exception("Error occurred while updating the medical record.", ex);
+            }
         }
 
         public void Delete(int id)
         {
-            var recordToDelete = _dbContext.MedicalRecords.FirstOrDefault(record => record.Id == id);
-            if (recordToDelete != null)
+            try
             {
-                _dbContext.MedicalRecords.Remove(recordToDelete);
-                _dbContext.SaveChanges();
+                var recordToDelete = _dbContext.MedicalRecords.FirstOrDefault(record => record.Id == id);
+                if (recordToDelete != null)
+                {
+                    _dbContext.MedicalRecords.Remove(recordToDelete);
+                    _dbContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                throw new Exception("Error occurred while deleting the medical record.", ex);
             }
         }
 
         public IEnumerable<MedicalRecord> Search(string searchTerm)
         {
-            return _dbContext.MedicalRecords
-                .Where(record => record.OwnerName.Contains(searchTerm) || 
-                                 record.HorseName.Contains(searchTerm) ||
-                                 record.VetName.Contains(searchTerm))
-                .ToList();
+            try
+            {
+                return _dbContext.MedicalRecords
+                    .Where(record => record.OwnerName.Contains(searchTerm) ||
+                                     record.HorseName.Contains(searchTerm) ||
+                                     record.VetName.Contains(searchTerm))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception
+                throw new Exception("Error occurred while searching for medical records.", ex);
+            }
         }
     }
 }
