@@ -9,6 +9,7 @@ import DisplayMedicalRecord from './Pages/DisplayMedicalRecord';
 import MedicalRecordForm from './Pages/MedicalRecordForm';
 import SearchMedicalRecord from './Pages/SearchMedicalRecord';
 import './index.css';
+import UpdateMedicalRecord from './Components/UpdateMedicalRecord';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
         path: '/medicalRecord/:id',
         element: <DisplayMedicalRecord />,
       },
+      {
+        path: "/medicalRecord/:id/update",
+        element: <UpdateMedicalRecord/>
+      }
     ],
   },
 ]);
