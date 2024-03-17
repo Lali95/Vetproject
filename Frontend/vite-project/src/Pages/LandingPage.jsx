@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { Outlet, Link } from 'react-router-dom';
+import logo from '../Pictures/logo.png'; // Import your logo image
 import '../Css/landingPage.css';
 
 const LandingPage = () => {
@@ -11,7 +12,13 @@ const LandingPage = () => {
   return (
     <div className="nav-container"> {/* Add a container class */}
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="/">Logo</Navbar.Brand>
+        <Navbar.Brand href="/">
+          <img
+            src={logo}
+            alt="Logo"
+            className="logo-img" // Apply logo-img class
+          />
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
