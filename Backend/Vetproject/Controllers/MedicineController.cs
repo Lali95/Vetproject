@@ -1,40 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
 using Vetproject.Model;
-using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Vetproject.Data;
+using Vetproject.Data.Repository;
+using System;
+using Vetproject.Service;
 
-namespace Vetproject.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-
-public class MedicineController : ControllerBase
+namespace Vetproject.Controllers
 {
-    private readonly MedicineContext _context;
-
-    public MedicineController(MedicineContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class MedicineController : ControllerBase
     {
-        _context = context;
-    }
-    
-    [HttpGet("getMedicines")]
-    public IActionResult GetMedicines()
-    {
-        try
-        {
-            var items = _context.Medicines.ToList();
-           
-        
-            return Ok(items);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return BadRequest("Error with medicines");
-        }
-    }
+        private readonly IMedicineRepository _medicineRepository;
+        private readonly ILoggerService _logger;
 
+        public MedicineController(IMedicineRepository medicineRepository, ILoggerService logger)
+        {
+            _medicineRepository = medicineRepository;
+            _logger = logger;
+        }
     
+        [HttpGet("getMedicines")]
+        public IActionResult GetMedicines()
+        {
+            try
+            {
+                var medicines = _medicineRepository.GetAllMedicines();
+                return Ok(medicines);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return BadRequest("Error with medicines");
+            }
+        }
+    }
 }
