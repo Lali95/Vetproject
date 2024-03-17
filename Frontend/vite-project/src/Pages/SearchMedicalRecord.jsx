@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import '../Css/searchMedicalRecord.css'; // Import CSS file for styling
 
 const SearchMedicalRecord = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -51,7 +52,7 @@ const SearchMedicalRecord = () => {
   };
 
   return (
-    <div>
+    <div className="search-medical-record">
       <h1>Medical Records</h1>
       
       <div className="search-container">
