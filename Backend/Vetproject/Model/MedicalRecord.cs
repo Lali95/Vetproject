@@ -11,9 +11,7 @@ namespace Vetproject.Model
         public string HorseName { get; set; }
         public string Place { get; set; }
         public string MedicalIntervention { get; set; }
-        public DateTime CreatedAt { get; set; } // New property for storing creation date
-
-        // Collection of medicines
+        public DateTime CreatedAt { get; set; } 
         public List<Medicine> Medicines { get; set; } = new List<Medicine>();
     }
 

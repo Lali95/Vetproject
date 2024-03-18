@@ -10,13 +10,13 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="nav-container"> {/* Add a container class */}
+    <div className="nav-container">
       <Navbar bg="light" expand="lg">
         <Navbar.Brand href="/">
           <img
             src={logo}
             alt="Logo"
-            className="logo-img" // Apply logo-img class
+            className="logo-img" 
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

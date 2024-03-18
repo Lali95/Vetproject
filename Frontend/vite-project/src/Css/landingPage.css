@@ -18,14 +18,14 @@
 }
 
 .logo-img {
-  height: 130px; /* Adjust height to be twice the original size */
-  width: auto; /* Maintain aspect ratio */
-  background-color: transparent; /* Remove background */
+  height: 130px;
+  width: auto;
+  background-color: transparent; 
 }
 
 .back-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 999; /* Ensure the button appears on top of other content */
+  z-index: 999; 
 }

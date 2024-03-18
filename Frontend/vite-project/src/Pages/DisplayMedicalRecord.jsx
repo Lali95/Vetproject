@@ -11,7 +11,7 @@ const DisplayMedicalRecord = () => {
   const [deleteComplete, setDeleteComplete] = useState(false);
 
   useEffect(() => {
-    // Fetch medical record details based on ID from API
+   
     fetch(`/api/MedicalRecord/${id}`)
       .then(response => {
         if (!response.ok) {
@@ -30,7 +30,7 @@ const DisplayMedicalRecord = () => {
   const handleDelete = () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this medical record?');
     if (confirmDelete) {
-      // Make an API call to delete the medical record
+     
       fetch(`/api/MedicalRecord/deleteMedicalRecord/${id}`, {
         method: 'DELETE',
       })
@@ -49,7 +49,7 @@ const DisplayMedicalRecord = () => {
   };
 
   const handleUpdate = () => {
-    // Redirect to the update page
+   
     window.location.href = `/medicalRecord/${id}/update`;
   };
 
@@ -61,7 +61,6 @@ const DisplayMedicalRecord = () => {
           <MedicalRecordCard medicalRecord={medicalRecord} />
           <Button variant="danger" onClick={handleDelete}>Delete Medical Record</Button>
           {showMessage && <p>Medical record deleted</p>}
-          {/* Update button to navigate to the update page */}
           <Button variant="primary" onClick={handleUpdate}>Update Medical Record</Button>
         </div>
       ) : (
