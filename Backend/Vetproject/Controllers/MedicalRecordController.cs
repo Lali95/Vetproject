@@ -32,7 +32,6 @@ public class MedicalRecordController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Log the exception
             return StatusCode(500, "An error occurred while processing the request.");
         }
     }
@@ -49,7 +48,6 @@ public class MedicalRecordController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Log the exception
             return StatusCode(500, "An error occurred while processing the request.");
         }
     }
@@ -64,7 +62,6 @@ public class MedicalRecordController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Log the exception
             return StatusCode(500, "An error occurred while processing the request.");
         }
     }
@@ -86,9 +83,6 @@ public class MedicalRecordController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Log the exception
-           
-            Console.WriteLine(ex.Message);
             return StatusCode(500, "An error occurred while processing the request.");
         }
     }
@@ -109,7 +103,7 @@ public class MedicalRecordController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Log the exception
+           
             return StatusCode(500, "An error occurred while processing the request.");
         }
     }
@@ -129,7 +123,7 @@ public class MedicalRecordController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Log the exception
+            
             return StatusCode(500, "An error occurred while processing the request.");
         }
     }
