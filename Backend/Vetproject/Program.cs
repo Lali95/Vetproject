@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Vetproject.Data;
 using Vetproject.Data.Repository;
 using Vetproject.Model;
+using Vetproject.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,9 @@ void AddServices(IServiceCollection services)
 
     services.AddDbContext<MedicineContext>(options =>
         options.UseSqlServer(connectionString));
+    services.AddScoped<IMedicineRepository, MedicineRepository>();
+    services.AddScoped<ILoggerService, LoggerService>();
+
 
     services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
 }

@@ -59,6 +59,14 @@ namespace Vetproject.Data.Repository
         {
             try
             {
+                // Detach any existing entity with the same key from the context
+                var existingRecord = _dbContext.MedicalRecords.Local.FirstOrDefault(record => record.Id == medicalRecord.Id);
+                if (existingRecord != null)
+                {
+                    _dbContext.Entry(existingRecord).State = EntityState.Detached;
+                }
+
+                // Update the medical record
                 _dbContext.MedicalRecords.Update(medicalRecord);
                 _dbContext.SaveChanges();
             }
@@ -68,6 +76,7 @@ namespace Vetproject.Data.Repository
                 throw new Exception("Error occurred while updating the medical record.", ex);
             }
         }
+
 
         public void Delete(int id)
         {

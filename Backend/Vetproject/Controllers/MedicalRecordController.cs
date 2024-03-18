@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Vetproject.Data.Repository;
 using Vetproject.Model;
@@ -79,13 +80,15 @@ public class MedicalRecordController : ControllerBase
                 return NotFound("Medical record not found.");
             }
 
-            medicalRecord.Id = id;
+         
             _medicalRecordRepository.Update(medicalRecord);
             return Ok("Medical Record updated successfully.");
         }
         catch (Exception ex)
         {
             // Log the exception
+           
+            Console.WriteLine(ex.Message);
             return StatusCode(500, "An error occurred while processing the request.");
         }
     }
