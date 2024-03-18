@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 const UpdateMedicalRecord = () => {
   const { id } = useParams();
   const [medicalRecord, setMedicalRecord] = useState(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
     // Fetch medical record details based on ID from API
@@ -42,11 +43,10 @@ const UpdateMedicalRecord = () => {
         if (!response.ok) {
           throw new Error('Failed to update medical record');
         }
-        // Optionally, handle success scenario (e.g., display success message)
+        setShowSuccessMessage(true); // Display success message
       })
       .catch(error => {
         console.error('Error updating medical record:', error);
-        // Optionally, handle error scenario (e.g., display error message)
       });
   };
 
@@ -54,71 +54,80 @@ const UpdateMedicalRecord = () => {
   return (
     <div>
       <h1>Update Medical Record</h1>
+      {showSuccessMessage && <p className="text-success">Medical record updated successfully!</p>}
       {medicalRecord ? (
         <form>
-          <div>
-            <label>Vet Name:</label>
+          <div className="mb-3">
+            <label className="form-label">Vet Name:</label>
             <input
               type="text"
+              className="form-control"
               value={medicalRecord.vetName}
               onChange={e => handleFieldChange('vetName', e.target.value)}
             />
           </div>
-          <div>
-            <label>Owner Name:</label>
+          <div className="mb-3">
+            <label className="form-label">Owner Name:</label>
             <input
               type="text"
+              className="form-control"
               value={medicalRecord.ownerName}
               onChange={e => handleFieldChange('ownerName', e.target.value)}
             />
           </div>
-          <div>
-            <label>Horse Name:</label>
+          <div className="mb-3">
+            <label className="form-label">Horse Name:</label>
             <input
               type="text"
+              className="form-control"
               value={medicalRecord.horseName}
               onChange={e => handleFieldChange('horseName', e.target.value)}
             />
           </div>
-          <div>
-            <label>Place:</label>
+          <div className="mb-3">
+            <label className="form-label">Place:</label>
             <input
               type="text"
+              className="form-control"
               value={medicalRecord.place}
               onChange={e => handleFieldChange('place', e.target.value)}
             />
           </div>
-          <div>
-            <label>Medical Intervention:</label>
+          <div className="mb-3">
+            <label className="form-label">Medical Intervention:</label>
             <input
               type="text"
+              className="form-control"
               value={medicalRecord.medicalIntervention}
               onChange={e => handleFieldChange('medicalIntervention', e.target.value)}
             />
           </div>
-          <div>
-            <label>Created At:</label>
+          <div className="mb-3">
+            <label className="form-label">Created At:</label>
             <input
               type="text"
+              className="form-control"
               value={medicalRecord.createdAt}
               readOnly
             />
           </div>
-          <div>
-            <label>List of Medicines:</label>
+          <div className="mb-3">
+            <label className="form-label">List of Medicines:</label>
             <textarea
+              className="form-control"
               value={medicalRecord.medicines}
               onChange={e => handleFieldChange('medicines', e.target.value)}
             />
           </div>
-          {/* Repeat similar structure for other fields */}
-          <button type="button" onClick={handleSave}>Save Changes</button>
+          <button type="button" className="btn btn-primary" onClick={handleSave}>Save Changes</button>
         </form>
       ) : (
         <p>Loading...</p>
       )}
     </div>
   );
+  
+  
   
   
   
