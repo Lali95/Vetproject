@@ -7,7 +7,7 @@ const UpdateMedicalRecord = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   useEffect(() => {
-    // Fetch medical record details based on ID from API
+    
     fetch(`/api/MedicalRecord/${id}`)
       .then(response => {
         if (!response.ok) {
@@ -31,7 +31,7 @@ const UpdateMedicalRecord = () => {
   };
 
   const handleSave = () => {
-    // Make PUT request to update the entire medical record
+  
     fetch(`/api/MedicalRecord/updateMedicalRecord/${id}`, {
       method: 'PUT',
       headers: {
@@ -43,7 +43,7 @@ const UpdateMedicalRecord = () => {
         if (!response.ok) {
           throw new Error('Failed to update medical record');
         }
-        setShowSuccessMessage(true); // Display success message
+        setShowSuccessMessage(true); 
       })
       .catch(error => {
         console.error('Error updating medical record:', error);
