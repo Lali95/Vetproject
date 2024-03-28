@@ -5,6 +5,6 @@ namespace Vetproject.Data.Repository
 {
     public interface IMedicineRepository
     {
-        IEnumerable<Medicine> GetAllMedicines();
+        Task<IEnumerable<Medicine>> GetAllMedicines();
     }
 }

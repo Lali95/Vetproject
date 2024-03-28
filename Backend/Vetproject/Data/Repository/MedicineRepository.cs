@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Vetproject.Model;
 
 namespace Vetproject.Data.Repository
@@ -13,9 +14,9 @@ namespace Vetproject.Data.Repository
             _context = context;
         }
 
-        public IEnumerable<Medicine> GetAllMedicines()
+        public async Task<IEnumerable<Medicine>> GetAllMedicines()
         {
-            return _context.Medicines.ToList();
+            return await _context.Medicines.ToListAsync();
         }
     }
 }
