@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import '../Css/searchMedicalRecord.css'; 
+import '../Css/searchMedicalRecord.css'; // Import CSS file for styling
 
 const SearchMedicalRecord = () => {
   const [searchTerm, setSearchTerm] = useState('');
