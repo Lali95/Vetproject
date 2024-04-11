@@ -36,7 +36,7 @@ namespace Vetproject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MedicalTreatment")
+                    b.Property<string>("MedicalIntervention")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

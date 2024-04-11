@@ -1,112 +1,137 @@
 using Microsoft.AspNetCore.Identity;
 using Vetproject.Contracts;
 using Vetproject.Model;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Vetproject.Service.Authentication;
-
-public class AuthService : IAuthService
+namespace Vetproject.Service.Authentication
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly ITokenService _tokenService;
-
-    public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService)
+    public class AuthService : IAuthService
     {
-        _userManager = userManager;
-        _tokenService = tokenService;
-    }
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ITokenService _tokenService;
 
-    public async Task<AuthResult> RegisterAsync(string email, string userName, string password, DateTime birthDate, string address, string role)
-    {
-        var user = new ApplicationUser
-            { UserName = userName, Email = email, BirthDate = birthDate, Address = address, IsActive = true };
-        var result = await _userManager.CreateAsync(user, password);
-
-        if (!result.Succeeded)
+        public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService)
         {
-            return FailedRegistration(result, email, userName);
+            _userManager = userManager;
+            _tokenService = tokenService;
         }
 
-        await _userManager.AddToRoleAsync(user, role);
-        return new AuthResult(true, email, userName, "");
-    }
-
-    public async Task<AuthResult> LoginAsync(string email, string password)
-    {
-        var managedUser = await _userManager.FindByEmailAsync(email);
-        if (managedUser == null)
+        public async Task<AuthResult> RegisterAsync(string email, string userName, string password, DateTime birthDate, string address, string role)
         {
-            return InvalidEmail(email);
+            if (string.IsNullOrEmpty(role))
+            {
+                role = "DefaultRole";
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = userName,
+                Email = email,
+                BirthDate = birthDate,
+                Address = address,
+                IsActive = true
+            };
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (!result.Succeeded)
+            {
+                return FailedRegistration(result, email, userName);
+            }
+
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, role);
+            if (!addToRoleResult.Succeeded)
+            {
+                return HandleAddToRoleFailure(addToRoleResult.Errors);
+            }
+
+            return new AuthResult(true, email, userName, "");
         }
 
-        var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, password);
-        if (!isPasswordValid)
+        public async Task<AuthResult> LoginAsync(string email, string password)
         {
-            return InvalidPassword(email, managedUser.UserName);
+            var managedUser = await _userManager.FindByEmailAsync(email);
+            if (managedUser == null)
+            {
+                return InvalidEmail(email);
+            }
+
+            var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, password);
+            if (!isPasswordValid)
+            {
+                return InvalidPassword(email, managedUser.UserName);
+            }
+
+            if (!managedUser.IsActive)
+            {
+                return InactiveUser(managedUser.UserName);
+            }
+
+            var roles = await _userManager.GetRolesAsync(managedUser);
+            var accessToken = _tokenService.CreateToken(managedUser, roles[0]);
+            return new AuthResult(true, managedUser.Email, managedUser.UserName, accessToken);
         }
 
-        if (!managedUser.IsActive)
+        public async Task<AuthResult> DeactivateAsync(string email, string password)
         {
-            return InactiveUser(managedUser.UserName);
+            var managedUser = await _userManager.FindByEmailAsync(email);
+            if (managedUser == null)
+            {
+                return InvalidEmail(email);
+            }
+            var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, password);
+            if (!isPasswordValid)
+            {
+                return InvalidPassword(email, managedUser.UserName);
+            }
+
+            if (!managedUser.IsActive)
+            {
+                return InactiveUser(managedUser.UserName);
+            }
+
+            managedUser.IsActive = false;
+            await _userManager.UpdateAsync(managedUser);
+            return new AuthResult(true, $"", managedUser.UserName, "");
         }
 
-        var roles = await _userManager.GetRolesAsync(managedUser);
-        var accessToken = _tokenService.CreateToken(managedUser, roles[0]);
-        return new AuthResult(true, managedUser.Email, managedUser.UserName, accessToken);
-    }
+        private AuthResult FailedRegistration(IdentityResult result, string email, string username)
+        {
+            var authResult = new AuthResult(false, email, username, "");
 
-    public async Task<AuthResult> DeactivateAsync(string email, string password)
-    {
-        var managedUser = await _userManager.FindByEmailAsync(email);
-        if (managedUser == null)
-        {
-            return InvalidEmail(email);
-        }
-        var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, password);
-        if (!isPasswordValid)
-        {
-            return InvalidPassword(email, managedUser.UserName);
+            foreach (var error in result.Errors)
+            {
+                authResult.ErrorMessages.Add(error.Code, error.Description);
+            }
+
+            return authResult;
         }
 
-        if (!managedUser.IsActive)
+        private AuthResult InvalidEmail(string email)
         {
-            return InactiveUser(managedUser.UserName);
-        }
-        
-        managedUser.IsActive = false;
-        await _userManager.UpdateAsync(managedUser);
-        return new AuthResult(true, $"", managedUser.UserName, "");
-    }
-
-    private static AuthResult FailedRegistration(IdentityResult result, string email, string username)
-    {
-        var authResult = new AuthResult(false, email, username, "");
-
-        foreach (var error in result.Errors)
-        {
-            authResult.ErrorMessages.Add(error.Code, error.Description);
+            var result = new AuthResult(false, email, "", "");
+            result.ErrorMessages.Add("Bad credentials", "Invalid email");
+            return result;
         }
 
-        return authResult;
-    }
-    
-    private static AuthResult InvalidEmail(string email)
-    {
-        var result = new AuthResult(false, email, "", "");
-        result.ErrorMessages.Add("Bad credentials", "Invalid email");
-        return result;
-    }
-    
-    private static AuthResult InvalidPassword(string email, string userName)
-    {
-        var result = new AuthResult(false, email, userName, "");
-        result.ErrorMessages.Add("Bad credentials", "Invalid password");
-        return result;
-    }
+        private AuthResult InvalidPassword(string email, string userName)
+        {
+            var result = new AuthResult(false, email, userName, "");
+            result.ErrorMessages.Add("Bad credentials", "Invalid password");
+            return result;
+        }
 
-    private static AuthResult InactiveUser(string userName)
-    {
-        var result = new AuthResult(false, "", userName, "");
-        result.ErrorMessages.Add("Deleted user", "This user is not active anymore.");
-        return result;
+        private AuthResult InactiveUser(string userName)
+        {
+            var result = new AuthResult(false, "", userName, "");
+            result.ErrorMessages.Add("Deleted user", "This user is not active anymore.");
+            return result;
+        }
+
+        private AuthResult HandleAddToRoleFailure(IEnumerable<IdentityError> errors)
+        {
+            return new AuthResult(false, "", "", "Failed to add user to role");
+        }
     }
 }

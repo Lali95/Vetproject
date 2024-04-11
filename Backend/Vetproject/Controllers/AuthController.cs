@@ -31,18 +31,27 @@ namespace Vetproject.Controllers
         [HttpPost("Register")]
         public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            var userRole = _configuration["RoleSettings:UserRole"];
-            var result = await _authService.RegisterAsync(request.Email, request.UserName, request.Password,
-                request.BirthDate, request.Address, userRole!);
+                var userRole = _configuration["RoleSettings:UserRole"];
+                var result = await _authService.RegisterAsync(request.Email, request.UserName, request.Password,
+                    request.BirthDate, request.Address, userRole!);
 
-            if (!result.Success)
-                return BadRequest(result.ErrorMessages);
+                if (!result.Success)
+                    return BadRequest(result.ErrorMessages);
 
-            return CreatedAtAction(nameof(Register), new RegistrationResponse(result.Email, result.UserName));
+                return CreatedAtAction(nameof(Register), new RegistrationResponse(result.Email, result.UserName));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during registration.");
+                return StatusCode(500, "An unexpected error occurred during registration.");
+            }
         }
+
 
         [HttpPost("Login")]
         public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthRequest request)
@@ -62,6 +71,7 @@ namespace Vetproject.Controllers
         [HttpGet("GetUserByEmail/{userEmail}")]
         public async Task<ActionResult<ApplicationUser>> GetUserByEmail(string userEmail)
         {
+            Console.WriteLine("im backend");
             try
             {
                 var user = await _userRepository.GetUserByEmailAsync(userEmail);

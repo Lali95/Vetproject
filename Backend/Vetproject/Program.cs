@@ -59,8 +59,6 @@ void AddServices(IServiceCollection services)
 
 
     services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
-    services.AddDbContext<UsersContext>(options =>
-        options.UseSqlServer(connectionString));
 }
 
 
