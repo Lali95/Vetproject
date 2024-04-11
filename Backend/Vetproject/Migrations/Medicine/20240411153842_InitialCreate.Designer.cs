@@ -11,7 +11,7 @@ using Vetproject.Data;
 namespace Vetproject.Migrations.Medicine
 {
     [DbContext(typeof(MedicineContext))]
-    [Migration("20240317174036_InitialCreate")]
+    [Migration("20240411153842_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

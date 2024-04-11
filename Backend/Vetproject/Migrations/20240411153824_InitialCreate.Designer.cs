@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Vetproject.Migrations
 {
     [DbContext(typeof(MedicalRecordDbContext))]
-    [Migration("20240317173947_InitialCreate")]
+    [Migration("20240411153824_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
