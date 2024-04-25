@@ -1,9 +1,12 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Vetproject.Data;
 using Vetproject.Data.Repository;
@@ -27,6 +30,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 
 app.UseCors(options =>
@@ -47,7 +52,7 @@ void AddServices(IServiceCollection services)
 {
     services.AddControllers();
 
-    // Add DbContext with dependency injection
+    
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     services.AddDbContext<MedicalRecordDbContext>(options =>
         options.UseSqlServer(connectionString));
@@ -56,9 +61,27 @@ void AddServices(IServiceCollection services)
         options.UseSqlServer(connectionString));
     services.AddScoped<IMedicineRepository, MedicineRepository>();
     services.AddScoped<ILoggerService, LoggerService>();
-
+    services.AddDbContext<UsersContext>();
 
     services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
+    services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ClockSkew = TimeSpan.Zero,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = "apiWithAuthBackend",
+                ValidAudience = "apiWithAuthBackend",
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes("!SomethingSecret!!SomethingSecret!")
+                ),
+            };
+        });
 }
 
 

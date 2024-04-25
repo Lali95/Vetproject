@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Vetproject.Data.Repository;
 using Vetproject.Model;
 
@@ -36,7 +37,7 @@ public class MedicalRecordController : ControllerBase
         }
     }
 
-    [HttpGet("getAllMedicalRecords")]
+    [HttpGet("getAllMedicalRecords"), Authorize]
     public ActionResult<IEnumerable<MedicalRecord>> GetAllMedicalRecords()
     {
         try
