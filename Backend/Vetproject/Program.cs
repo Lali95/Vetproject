@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ using Vetproject.Data;
 using Vetproject.Data.Repository;
 using Vetproject.Model;
 using Vetproject.Service;
+using Vetproject.Service.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +64,20 @@ void AddServices(IServiceCollection services)
     services.AddScoped<IMedicineRepository, MedicineRepository>();
     services.AddScoped<ILoggerService, LoggerService>();
     services.AddDbContext<UsersContext>();
+    services
+        .AddIdentityCore<IdentityUser>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = false;
+            options.User.RequireUniqueEmail = true;
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+        })
+        .AddEntityFrameworkStores<UsersContext>();
+    services.AddScoped<IAuthService, AuthService>();
+    services.AddScoped<ITokenService, TokenService>();
 
     services.AddScoped<IMedicalRecordRepository, MedicalRecordRepository>();
     services
