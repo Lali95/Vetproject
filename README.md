@@ -15,7 +15,7 @@ This Medical Records Management System is built to simplify and optimize the man
 
 ## Technologies
 
-    ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) 
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) 
    ![React Bootstrap](https://img.shields.io/badge/React%20Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
     ![.NET](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
    ![Entity Framework](https://img.shields.io/badge/Entity%20Framework-007ACC?style=for-the-badge&logo=Microsoft&logoColor=white)
