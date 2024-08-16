@@ -37,7 +37,7 @@ public class MedicalRecordController : ControllerBase
         }
     }
 
-    [HttpGet("getAllMedicalRecords"), Authorize]
+    [HttpGet("getAllMedicalRecords")]
     public ActionResult<IEnumerable<MedicalRecord>> GetAllMedicalRecords()
     {
         try

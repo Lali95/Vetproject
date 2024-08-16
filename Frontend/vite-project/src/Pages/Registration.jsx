@@ -1,31 +1,25 @@
+
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 const Registration = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordMatch, setPasswordMatch] = useState(true);
-  const [birthdate, setBirthdate] = useState("");
-  const [address, setAddress] = useState("");
-  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+
 
   const handleRegistration = async (e) => {
     e.preventDefault();
 
- 
-
     const registrationData = {
-      UserName: username,
+      Username: username,
       Email: email,
-      Password: password,
-      BirthDate: birthdate,
-      Address: address,
+      Password: password
     };
 
     try {
-      const response = await fetch("/api/Auth/Register", {
+      const response = await fetch('api/Auth/Register', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,74 +28,60 @@ const Registration = () => {
       });
 
       if (!response.ok) {
-        console.error("Registration failed:", response.statusText);
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
         return;
       }
 
-      const data = await response.json();
-      console.log("Registration successful");
-      console.log("User Email:", data.email);
-      console.log("User Token:", data.token);
-
-      navigate(`/login`);
+ 
   
     } catch (error) {
       console.error("Error during registration:", error);
+      setErrorMessage("An error occurred during registration. Please try again later.");
     }
   };
 
-  console.log("password match", passwordMatch);
   return (
     <div className="registration-container">
-      <h4>Please, enter your data for registering to MovieMerchShop</h4>
+      <h4>Please enter your details to register</h4>
       <form onSubmit={handleRegistration}>
-        <label>
-          Select a username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Your email address:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Your password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-      
-        <label>
-          Date of birth:
-          <input
-            type="date"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Address:
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Register</button>
+        <div>
+          <label>
+            Username:
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Email:
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Password:
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div>
+          <button type="submit">Register</button>
+        </div>
       </form>
     </div>
   );
